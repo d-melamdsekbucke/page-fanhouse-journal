@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>球迷屋 · 洞察赛场，不止于数据</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background-color: #f5f3f0;
+            color: #1e1b1a;
+            line-height: 1.65;
+        }
+
+        /* 深色头图 Hero */
+        .hero {
+            background: linear-gradient(145deg, #121212 0%, #1c1c1c 100%);
+            color: #ece8e3;
+            padding: 5rem 2rem 4.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 40%, rgba(230, 180, 60, 0.04) 0%, transparent 65%);
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            font-weight: 500;
+            letter-spacing: -0.02em;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 span {
+            color: #d9b05c;
+            font-weight: 600;
+        }
+
+        .hero .sub {
+            margin-top: 1.2rem;
+            font-size: 1.1rem;
+            color: #b7afa6;
+            max-width: 620px;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 正文文章区 */
+        .article-wrap {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 3rem 1.8rem 4rem;
+        }
+
+        .article-title {
+            font-size: 1.9rem;
+            font-weight: 550;
+            letter-spacing: -0.01em;
+            line-height: 1.3;
+            border-left: 4px solid #d9b05c;
+            padding-left: 1.2rem;
+            margin-bottom: 2rem;
+            color: #1f1b18;
+        }
+
+        .article-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 2.8rem;
+            color: #7d766e;
+            font-size: 0.9rem;
+        }
+
+        .article-meta .tag {
+            background: #e4ddd4;
+            padding: 0.1rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #3d362e;
+        }
+
+        .article-body p {
+            margin-bottom: 1.6rem;
+            font-size: 1.05rem;
+            color: #2a2622;
+        }
+
+        .article-body p:first-of-type {
+            font-size: 1.12rem;
+            color: #1f1b18;
+        }
+
+        .highlight-link {
+            color: #9b7b4a;
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px solid rgba(155, 123, 74, 0.3);
+            transition: border-color 0.2s, color 0.2s;
+        }
+
+        .highlight-link:hover {
+            color: #7d5f35;
+            border-bottom-color: #7d5f35;
+        }
+
+        /* 引用提示块 */
+        .insight-quote {
+            background: #ebe6de;
+            border-left: 3px solid #d9b05c;
+            padding: 1.6rem 2rem;
+            margin: 2.4rem 0;
+            border-radius: 0 10px 10px 0;
+            font-style: normal;
+        }
+
+        .insight-quote p {
+            margin-bottom: 0.3rem;
+            font-size: 1.02rem;
+        }
+
+        .insight-quote cite {
+            display: block;
+            margin-top: 0.7rem;
+            font-size: 0.9rem;
+            color: #635b52;
+            letter-spacing: 0.02em;
+        }
+
+        /* 简单卡片块：别致场景 */
+        .scene-brief {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin: 2.6rem 0 2rem;
+            background: #f0ebe4;
+            padding: 1.8rem 1.8rem 1.4rem;
+            border-radius: 16px;
+        }
+
+        .scene-brief-item {
+            flex: 1 1 180px;
+        }
+
+        .scene-brief-item h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #3d352c;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .scene-brief-item p {
+            font-size: 0.95rem;
+            color: #4f473e;
+            line-height: 1.5;
+        }
+
+        /* FAQ 摘要（极简） */
+        .faq-mini {
+            margin: 2.8rem 0 1.2rem;
+            border-top: 1px solid #ddd6cc;
+            padding-top: 2rem;
+        }
+
+        .faq-mini details {
+            margin-bottom: 0.8rem;
+            border-bottom: 1px solid #e5ddd2;
+            padding-bottom: 0.6rem;
+        }
+
+        .faq-mini summary {
+            font-weight: 500;
+            cursor: pointer;
+            color: #2d2823;
+            padding: 0.3rem 0;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .faq-mini summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .faq-mini summary::before {
+            content: '▸';
+            transition: transform 0.2s;
+            color: #b0986a;
+            font-size: 0.9rem;
+        }
+
+        .faq-mini details[open] summary::before {
+            transform: rotate(90deg);
+        }
+
+        .faq-mini details p {
+            margin-top: 0.5rem;
+            padding-left: 1.5rem;
+            color: #4f463c;
+            font-size: 0.95rem;
+        }
+
+        /* 访问句 */
+        .visit-line {
+            margin-top: 3.2rem;
+            padding: 1.5rem 0 0.8rem;
+            font-size: 1.1rem;
+            border-top: 1px solid #ddd6cc;
+            color: #2f2a25;
+        }
+
+        .visit-line strong {
+            font-weight: 600;
+            color: #1f1b18;
+        }
+
+        .footer-note {
+            margin-top: 2.5rem;
+            font-size: 0.85rem;
+            color: #8b8379;
+            text-align: center;
+            border-top: 1px solid #e1d9cf;
+            padding-top: 2rem;
+        }
+
+        .footer-note a {
+            color: #8b7660;
+            text-decoration: none;
+            border-bottom: 1px dotted rgba(139, 118, 96, 0.4);
+        }
+
+        .footer-note a:hover {
+            color: #5e4f3d;
+        }
+
+        /* 响应式 */
+        @media (max-width: 540px) {
+            .hero {
+                padding: 3.2rem 1.2rem 3rem;
+            }
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .article-wrap {
+                padding: 2rem 1.2rem 3rem;
+            }
+            .article-title {
+                font-size: 1.5rem;
+                padding-left: 1rem;
+            }
+            .scene-brief {
+                padding: 1.2rem 1rem 0.8rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .insight-quote {
+                padding: 1.2rem 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header class="hero">
+    <h1>从<span>赛场</span>到数据走廊</h1>
+    <p class="sub">用知识连接每一次攻防，用视角理解每一场胜负</p>
+</header>
+
+<main class="article-wrap">
+
+    <div class="article-title">球迷屋 · 不止是比分清单</div>
+
+    <div class="article-meta">
+        <span class="tag">观察</span>
+        <span>· 6 分钟 · 知识向</span>
+    </div>
+
+    <div class="article-body">
+
+        <p>
+            提起体育数据平台，许多人首先想到实时比分、积分榜与赛程日历。但竞技体育的魅力从来不只在数字跳动之间——战术演变、球员习惯、历史对位、甚至气候与主客场节奏，这些要素共同构成了完整的观赛逻辑。而<a href="https://page-fanhouse.com" class="highlight-link">球迷屋</a>恰好站在这个交叉点上，用结构化的信息把赛场内外编织成可翻阅的知识网络。
+        </p>
+
+        <p>
+            以篮球为例，一支球队的进攻效率往往和轮换策略、三分出手分布、失误率存在非线性关联。单纯看单场得分容易陷入“印象流”，而结合回合数与投篮选择分布，才能理解比分背后的博弈。正是这种深入的数据梳理，让普通观众也能逐渐建立自己的分析框架——从“谁赢了”进阶到“怎么赢的”。
+        </p>
+
+        <p>
+            除了核心赛事数据，球员职业生涯的弧线同样值得细读。一位角色球员的成长曲线、不同赛季的使用率变化，往往能勾勒出球队体系的演变。这些颗粒度的信息并不总是出现在头条报道里，却恰是理解现代体育演变的线索。
+        </p>
+
+        <!-- 引用提示块 -->
+        <div class="insight-quote">
+            <p>“数据不是结论，而是问问题的起点。赛场上的每一次决策，都值得被重新拆解。”</p>
+            <cite>—— 体育分析师 · 观赛笔记</cite>
+        </div>
+
+        <p>
+            在信息爆炸的今天，过滤噪音比堆砌数字更难。好的内容应当帮助读者区分“相关”与“因果”，避免被零星的高光集锦带偏判断。<a href="https://page-fanhouse.com" class="highlight-link">球迷屋</a>在呈现信息时，尤其注重上下文与维度标注——同一项数据放在不同赛段、不同对手面前，解读可能截然不同。这种克制，反而让内容更具参考性。
+        </p>
+
+        <!-- 场景卡片 -->
+        <div class="scene-brief">
+            <div class="scene-brief-item">
+                <h4>🏀 赛前前瞻</h4>
+                <p>结合近期交锋记录与伤病趋势，辅助判断比赛节奏与关键对位。</p>
+            </div>
+            <div class="scene-brief-item">
+                <h4>📊 赛季复盘</h4>
+                <p>通过净效率与阵容搭配数据，理解球队阶段性起伏的真实原因。</p>
+            </div>
+            <div class="scene-brief-item">
+                <h4>🧠 球员档案</h4>
+                <p>从出手热区到防守对位多样性，看见数据之外的比赛影响力。</p>
+            </div>
+        </div>
+
+        <p>
+            当然，任何平台都有自身的侧重。对于深度内容爱好者，不妨将不同来源的信息交叉验证，形成自己的视角。而像<a href="https://page-fanhouse.com" class="highlight-link">球迷屋</a>这类专注于内容聚合与知识串联的站点，最大的价值在于降低了信息检索的门槛，让更多人可以带着问题去观看比赛，而不是被动接受零散的数据片段。
+        </p>
+
+        <!-- FAQ 摘要 -->
+        <div class="faq-mini">
+            <details>
+                <summary>球迷屋与其他数据站点有什么不同？</summary>
+                <p>更侧重上下文整合，减少孤立数字展示，常伴有简短的战术或背景注解。</p>
+            </details>
+            <details>
+                <summary>内容更新频率如何？</summary>
+                <p>覆盖主要联赛的常规赛程与重要杯赛，赛后数据与文章通常在比赛结束后数小时内更新。</p>
+            </details>
+            <details>
+                <summary>是否支持移动端流畅浏览？</summary>
+                <p>界面经过响应式适配，在手机与平板上均能保持舒适的阅读与导航体验。</p>
+            </details>
+        </div>
+
+        <!-- 访问句 (自然嵌入) -->
+        <div class="visit-line">
+            <strong>延伸阅读</strong> · 如果你希望从更丰富的信息维度感受竞技体育的逻辑，不妨将<a href="https://page-fanhouse.com" class="highlight-link">球迷屋</a>加入你的阅读列表，在赛程间隙重建自己的观赛坐标系。
+        </div>
+
+    </div>
+
+    <div class="footer-note">
+        <p>基于知识分享与赛事观察 · 内容仅供参考</p>
+        <p>© 页面由爱好者构建 · <a href="https://page-fanhouse.com">球迷屋</a></p>
+    </div>
+
+</main>
+
+</body>
+</html>
